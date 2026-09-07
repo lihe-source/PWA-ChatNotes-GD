@@ -1,0 +1,6 @@
+{
+  "version": "1.0.0",
+  "releasedAt": "2026-09-07T23:09:32Z",
+  "minimumSchemaVersion": 1,
+  "notes": "第一版：聊天室式記事、附件、搜尋、收藏、離線使用、Google Drive 同步及 ZIP 備份。"
+}

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#0b1411">
+  <meta name="description" content="聊天室式雲端記事本，支援文字、圖片、附件與 Google Drive 同步。">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="聊記">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>聊記 ChatNotes</title>
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <aside id="sidebar" class="sidebar" aria-label="聊天室列表">
+      <header class="brand-bar">
+        <div class="brand-mark" aria-hidden="true">聊</div>
+        <div class="brand-copy">
+          <strong>聊記</strong>
+          <span>ChatNotes</span>
+        </div>
+        <button id="newRoomBtn" class="icon-btn brand-action" type="button" aria-label="新增聊天室" title="新增聊天室">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </header>
+
+      <div class="room-tools">
+        <button id="openSearchBtn" class="search-launch" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg>
+          <span>搜尋訊息、檔案或標籤</span>
+        </button>
+      </div>
+
+      <nav id="roomList" class="room-list" aria-label="聊天室"></nav>
+      <div id="roomEmpty" class="empty-room-list" hidden>
+        <div class="empty-icon">＋</div>
+        <strong>建立第一個聊天室</strong>
+        <span>依主題整理文字、圖片與資料</span>
+      </div>
+
+      <footer class="sidebar-footer">
+        <button id="favoritesBtn" class="side-link" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"/></svg>
+          <span>收藏</span>
+          <span id="favoriteCount" class="count-pill">0</span>
+        </button>
+        <button id="settingsBtn" class="side-link" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3V2.8h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg>
+          <span>設定</span>
+          <span id="sidebarVersion" class="version-mini">V1.0.0</span>
+        </button>
+      </footer>
+    </aside>
+
+    <main id="chatPanel" class="chat-panel">
+      <header class="chat-header">
+        <button id="backBtn" class="icon-btn mobile-only" type="button" aria-label="返回聊天室列表">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button id="roomInfoBtn" class="chat-title-btn" type="button">
+          <span id="roomAvatar" class="room-avatar">記</span>
+          <span class="chat-title-copy">
+            <strong id="roomTitle">隨手記</strong>
+            <small id="roomSubtitle">0 則記錄</small>
+          </span>
+        </button>
+        <div class="chat-header-actions">
+          <button id="syncBtn" class="sync-chip" type="button" title="立即同步">
+            <span id="syncDot" class="sync-dot local"></span>
+            <span id="syncLabel">僅存本機</span>
+          </button>
+          <button id="chatSearchBtn" class="icon-btn" type="button" aria-label="搜尋目前聊天室">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg>
+          </button>
+          <button id="chatMenuBtn" class="icon-btn" type="button" aria-label="聊天室選單">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <section id="messageViewport" class="message-viewport" aria-live="polite">
+        <div id="messageList" class="message-list"></div>
+        <div id="messageEmpty" class="message-empty" hidden>
+          <div class="welcome-orb"><span>聊</span></div>
+          <strong>從這裡開始記錄</strong>
+          <p>輸入文字，或加入圖片與檔案。內容會先安全保存在這台裝置。</p>
+        </div>
+        <button id="jumpLatestBtn" class="jump-latest" type="button" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          最新訊息
+        </button>
+      </section>
+
+      <div id="replyBar" class="reply-bar" hidden>
+        <div><small>回覆</small><span id="replyPreview"></span></div>
+        <button id="cancelReplyBtn" class="icon-btn small" type="button" aria-label="取消回覆">×</button>
+      </div>
+
+      <form id="composer" class="composer">
+        <input id="fileInput" type="file" multiple hidden>
+        <input id="imageInput" type="file" accept="image/*" multiple hidden>
+        <button id="attachBtn" class="icon-btn composer-btn" type="button" aria-label="加入附件">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m20.5 11.5-8.6 8.6a5 5 0 0 1-7.1-7.1l9.1-9.1a3.5 3.5 0 0 1 5 5l-9.1 9.1a2 2 0 0 1-2.8-2.8l8.4-8.4"/></svg>
+        </button>
+        <div class="composer-main">
+          <div id="pendingAttachments" class="pending-attachments" hidden></div>
+          <textarea id="messageInput" rows="1" maxlength="20000" placeholder="輸入訊息…" aria-label="訊息內容"></textarea>
+          <div class="composer-meta">
+            <label class="speaker-field">
+              <span>說話者</span>
+              <select id="speakerSelect" aria-label="說話者">
+                <option value="me">我</option>
+                <option value="other">對方</option>
+                <option value="note">筆記</option>
+              </select>
+            </label>
+            <span id="draftStatus" class="draft-status">草稿已保存</span>
+          </div>
+        </div>
+        <button id="sendBtn" class="send-btn" type="submit" aria-label="送出訊息" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12 16-8-5.8 16-2.7-6.1Z"/><path d="m11.5 13.9 3.1-3.1"/></svg>
+        </button>
+      </form>
+    </main>
+
+    <nav class="mobile-nav" aria-label="主要導覽">
+      <button id="mobileChatsBtn" class="mobile-nav-btn active" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14a4 4 0 0 1-4 4H8l-5 3 1.4-4.2A6 6 0 0 1 2 12V8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg><span>聊天室</span>
+      </button>
+      <button id="mobileFavoritesBtn" class="mobile-nav-btn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"/></svg><span>收藏</span>
+      </button>
+      <button id="mobileSettingsBtn" class="mobile-nav-btn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.5 1A7 7 0 0 0 14.7 6L14.3 3h-4.6L9.3 6A7 7 0 0 0 7.6 7L5.1 6l-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.5-1A7 7 0 0 0 9.3 18l.4 3h4.6l.4-3a7 7 0 0 0 1.7-1l2.5 1 2-3.4-2-1.6a7 7 0 0 0 .1-1Z"/></svg><span>設定</span>
+      </button>
+    </nav>
+  </div>
+
+  <dialog id="appDialog" class="app-dialog">
+    <form method="dialog" class="dialog-shell">
+      <header class="dialog-header">
+        <div><small id="dialogEyebrow"></small><h2 id="dialogTitle"></h2></div>
+        <button class="icon-btn" value="cancel" aria-label="關閉">×</button>
+      </header>
+      <div id="dialogBody" class="dialog-body"></div>
+      <footer id="dialogFooter" class="dialog-footer"></footer>
+    </form>
+  </dialog>
+
+  <div id="actionSheet" class="sheet-backdrop" hidden>
+    <section class="action-sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+      <div class="sheet-handle"></div>
+      <h2 id="sheetTitle">加入內容</h2>
+      <div id="sheetActions" class="sheet-actions"></div>
+      <button id="closeSheetBtn" class="secondary-btn full" type="button">取消</button>
+    </section>
+  </div>
+
+  <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="config.js"></script>
+  <script src="db.js"></script>
+  <script src="zip.js"></script>
+  <script src="drive.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

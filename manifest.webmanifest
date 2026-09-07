@@ -1,0 +1,22 @@
+{
+  "name": "聊記 ChatNotes",
+  "short_name": "聊記",
+  "description": "以聊天室方式保存文字、圖片、附件與對話，並同步至 Google Drive。",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07100d",
+  "theme_color": "#0b1411",
+  "lang": "zh-Hant",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "開啟聊天室", "short_name": "聊天室", "url": "./" }
+  ]
+}
